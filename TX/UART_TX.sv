@@ -1,5 +1,5 @@
-module UART_TX (
-input logic [7:0] i_data,
+module uart_tx #(parameter DATA_W = 8) (
+input logic [DATA_W - 1:0] i_data,
 input logic i_valid, i_clk, i_rst_n, i_par_en, i_par_odd,
 output logic o_tx, o_busy
 );
@@ -12,7 +12,7 @@ FSM_Controller FSMC ( .i_valid(i_valid), .i_clk(i_clk), .i_rst_n(i_rst_n), .i_pa
 					
 Serializer Serial ( .i_data(i_data), .i_clk(i_clk), .i_rst_n(i_rst_n), .start(Serial_start), .load(Serial_load), .out(Out1) );
 
-Parity_Bit_Calculator Parity ( .i_data(i_data), .Enable(i_par_en), .i_par_odd(i_par_odd), .P_out(Pout) );
+Parity_Bit_Calculator Parity ( .i_data(i_data), .Enable(Enable), .i_par_odd(i_par_odd), .P_out(Pout) );
 
 mux mux42 ( .start(Start_Bit), .inbits(Out1), .parity(Pout), .stop(Stop_Bit), .sel(sel), .out(o_tx) );
 
